@@ -907,10 +907,15 @@ function firmware_settings() {
 	KERNEL_PATCHVER="$(grep "KERNEL_PATCHVER" "$HOME_PATH/target/linux/$TARGET_BOARD/Makefile" |grep -Eo "[0-9]+\.[0-9]+")"
 	__info_msg "NEW_KERNEL_PATCHVER 变量的值为：$NEW_KERNEL_PATCHVER"
 	# 内核替换
+ if [[ "${TARGET_BOARD}" == "armvirt" ]]; then
+     KERNEL_patc="config-$NEW_KERNEL_PATCHVER"
+else
+     KERNEL_patc="patches-$NEW_KERNEL_PATCHVER"
+fi
 if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
     if [[ "$NEW_KERNEL_PATCHVER" == "0" ]]; then
         __info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
-    elif [[ $(ls -1 "$HOME_PATH/target/linux/$TARGET_BOARD" | grep -c "kernel-$NEW_KERNEL_PATCHVER") -eq '1' ]]; then
+    if [[ `ls -1 "$HOME_PATH/target/linux/$TARGET_BOARD" |grep -c "$KERNEL_patc"` -eq '1' ]]; then
         sed -i "s/${KERNEL_PATCHVER}/${NEW_KERNEL_PATCHVER}/g" $HOME_PATH/target/linux/$TARGET_BOARD/Makefile
         KERNEL_PATCHVER=$NEW_KERNEL_PATCHVER
         __success_msg "内核[ $NEW_KERNEL_PATCHVER ]更换完成"
