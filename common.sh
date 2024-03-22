@@ -71,8 +71,6 @@ function parse_settings() {
 	fi
 	if [[ $NEW_KERNEL_PATCHVER =~ (default|DEFAULT|Default) || -z $NEW_KERNEL_PATCHVER ]]; then
         NEW_KERNEL_PATCHVER="0"  # 使用默认值 0
-	echo NEW_KERNEL_PATCHVER="$NEW_KERNEL_PATCHVER" >> ${GITHUB_ENV}
-        __info_msg "NEW_KERNEL_PATCHVER 变量的值为：$NEW_KERNEL_PATCHVER"
         fi
 	case "$SOURCE_ABBR" in
 	lede|Lede|LEDE)
@@ -166,6 +164,8 @@ function parse_settings() {
 	echo "FILENAME_DEFAULT_RUNONCE=default_settings_runonce" >> $GITHUB_ENV
 	echo "FILENAME_CONFIG_GEN=config_generate" >> $GITHUB_ENV
 	echo "FILENAME_TO_DELETE=default_delete" >> $GITHUB_ENV
+
+        echo "NEW_KERNEL_PATCHVER=$NEW_KERNEL_PATCHVER" >> ${GITHUB_ENV}
 	
 	local cpu_name=$(cat /proc/cpuinfo | grep name | cut -d: -f2 | uniq | sed 's/^[[:space:]]\+//')
 	echo "::notice title=GithubCPU::$cpu_name"
