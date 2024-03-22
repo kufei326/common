@@ -901,7 +901,7 @@ function firmware_settings() {
 	# 内核版本
 	__yellow_color "开始获取内核版本信息、替换内核等..."
 	KERNEL_PATCHVER="$(grep "KERNEL_PATCHVER" "$HOME_PATH/target/linux/$TARGET_BOARD/Makefile" |grep -Eo "[0-9]+\.[0-9]+")"
-	
+	__info_msg "NEW_KERNEL_PATCHVER 变量的值为：$NEW_KERNEL_PATCHVER"
 	# 内核替换
 if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
     if [[ "$NEW_KERNEL_PATCHVER" == "0" ]]; then
