@@ -900,22 +900,22 @@ function firmware_settings() {
 	
 	# 内核版本
 	__yellow_color "开始获取内核版本信息、替换内核等..."
-	KERNEL_PATCHVER="$(grep "KERNEL_TESTING_PATCHVER" "$HOME_PATH/target/linux/$TARGET_BOARD/Makefile" |grep -Eo "[0-9]+\.[0-9]+")"
+	KERNEL_PATCHVER="$(grep "KERNEL_PATCHVER" "$HOME_PATH/target/linux/$TARGET_BOARD/Makefile" |grep -Eo "[0-9]+\.[0-9]+")"
 	
 	# 内核替换
-	if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
-		if [[ "$NEW_KERNEL_PATCHVER" == "0" ]]; then
-			__info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
-		elif [[ `ls -1 "$HOME_PATH/target/linux/$TARGET_BOARD" |grep -c "kernel-$NEW_KERNEL_PATCHVER"` -eq '1' ]]; then
-			sed -i "s/${KERNEL_PATCHVER}/${NEW_KERNEL_PATCHVER}/g" $HOME_PATH/target/linux/$TARGET_BOARD/Makefile
-			KERNEL_PATCHVER=$NEW_KERNEL_PATCHVER
-			__success_msg "内核[ $NEW_KERNEL_PATCHVER ]更换完成"
-		else
-			__error_msg "没发现与$TARGET_PROFILE机型对应[ $NEW_KERNEL_PATCHVER ]内核，使用默认内核[ $KERNEL_PATCHVER ]编译"
-		fi
-	else
-		__info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
-	fi
+	if [[ -n "${{ env.NEW_KERNEL_PATCHVER }}" ]]; then
+        if [[ "${{ env.NEW_KERNEL_PATCHVER }}" == "0" ]]; then
+        __info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
+        elif [[ `ls -1 "$HOME_PATH/target/linux/$TARGET_BOARD" |grep -c "kernel-${{ env.NEW_KERNEL_PATCHVER }}"` -eq '1' ]]; then
+        sed -i "s/${KERNEL_PATCHVER}/${{ env.NEW_KERNEL_PATCHVER }}/g" $HOME_PATH/target/linux/$TARGET_BOARD/Makefile
+        KERNEL_PATCHVER=${{ env.NEW_KERNEL_PATCHVER }}
+        __success_msg "内核[ ${{ env.NEW_KERNEL_PATCHVER }} ]更换完成"
+        else
+        __error_msg "没发现与$TARGET_PROFILE机型对应[ ${{ env.NEW_KERNEL_PATCHVER }} ]内核，使用默认内核[ $KERNEL_PATCHVER ]编译"
+    fi
+else
+    __info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
+fi
 	
 	local kernel_version_file="kernel-$KERNEL_PATCHVER"
 	if [[ -f "$HOME_PATH/include/$kernel_version_file" ]]; then
