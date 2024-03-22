@@ -915,7 +915,7 @@ fi
 if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
     if [[ "$NEW_KERNEL_PATCHVER" == "0" ]]; then
         __info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
-    if [[ `ls -1 "$HOME_PATH/target/linux/$TARGET_BOARD" |grep -c "$KERNEL_patc"` -eq '1' ]]; then
+    elif [[ `ls -1 "$HOME_PATH/target/linux/$TARGET_BOARD" |grep -c "$KERNEL_patc"` -eq '1' ]]; then
         sed -i "s/${KERNEL_PATCHVER}/${NEW_KERNEL_PATCHVER}/g" $HOME_PATH/target/linux/$TARGET_BOARD/Makefile
         KERNEL_PATCHVER=$NEW_KERNEL_PATCHVER
         __success_msg "内核[ $NEW_KERNEL_PATCHVER ]更换完成"
