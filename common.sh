@@ -69,7 +69,9 @@ function parse_settings() {
 	else
 		ENABLE_PACKAGES_UPDATE="false"
 	fi
-	
+	if [[ $NEW_KERNEL_PATCHVER =~ (default|DEFAULT|Default) || -z $NEW_KERNEL_PATCHVER ]]; then
+        NEW_KERNEL_PATCHVER="0"  # 使用默认值 0
+        fi
 	case "$SOURCE_ABBR" in
 	lede|Lede|LEDE)
 		SOURCE_URL="https://github.com/coolsnowwolf/lede"
