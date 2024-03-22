@@ -916,10 +916,6 @@ if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
 else
     __info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
 fi
-
-else
-    __info_msg "编译固件内核：[ $KERNEL_PATCHVER ]"
-fi
 	
 	local kernel_version_file="kernel-$KERNEL_PATCHVER"
 	if [[ -f "$HOME_PATH/include/$kernel_version_file" ]]; then
