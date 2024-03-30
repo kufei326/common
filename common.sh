@@ -234,7 +234,7 @@ function git_clone_source() {
 	cp -rf $(find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './') $HOME_PATH/
 	
 	# 下载common仓库
-	sudo rm -rf $COMMON_PATH && git clone -b main --depth 1 https://github.com/roacn/common $COMMON_PATH
+	sudo rm -rf $COMMON_PATH && git clone -b main --depth 1 https://github.com/kufei326/common $COMMON_PATH
 	chmod -Rf +x $BUILD_PATH
 	
 }
