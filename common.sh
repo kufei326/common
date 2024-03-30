@@ -291,7 +291,7 @@ sed -i 's/^\tgrep.*vermagic/\tcp -f \$(TOPDIR)\/\.vermagic \$(LINUX_DIR)\/\.verm
 	/bin/bash "$MATRIX_TARGET_PATH/$DIY_PART_SH"
 	
 	# 再次更新插件源，并安装插件源
-	./scripts/feeds update -a > /dev/null 2>&1 && ./scripts/feeds install -a > /dev/null 2>&1 && ./scripts/feeds install libpam libnetsnmp liblzma
+	./scripts/feeds update -a > /dev/null 2>&1 && ./scripts/feeds install -a > /dev/null 2>&1
 
         # 修改golang版本
         rm -rf feeds/packages/lang/golang
