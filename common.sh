@@ -879,7 +879,7 @@ function firmware_settings() {
 	# 机型架构
 	__yellow_color "开始获取固件机型架构信息..."
 	if [ `grep -c "CONFIG_TARGET_x86_64=y" .config` -eq '1' ]; then
-		TARGET_PROFILE="generic"
+		TARGET_PROFILE="x86-64"
 	elif [[ `grep -c "CONFIG_TARGET_x86=y" .config` == '1' &&  `grep -c "CONFIG_TARGET_x86_64=y" .config` == '0' ]]; then
 		TARGET_PROFILE="x86-32"
 	elif [[ -n "$(grep -Eo 'CONFIG_TARGET.*armsr.*armv8.*=y' $HOME_PATH/.config)" ]]; then
@@ -915,7 +915,7 @@ function firmware_settings() {
  if [[ "${TARGET_BOARD}" == "armvirt" ]]; then
      KERNEL_patc="config-$NEW_KERNEL_PATCHVER"
 else
-     KERNEL_patc="pending-$NEW_KERNEL_PATCHVER"
+     KERNEL_patc="patches-$NEW_KERNEL_PATCHVER"
 fi
 if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
     if [[ "$NEW_KERNEL_PATCHVER" == "0" ]]; then
