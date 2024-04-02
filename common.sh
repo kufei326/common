@@ -915,7 +915,7 @@ function firmware_settings() {
  if [[ "${TARGET_BOARD}" == "armvirt" ]]; then
      KERNEL_patc="config-$NEW_KERNEL_PATCHVER"
 else
-     KERNEL_patc="patches-$NEW_KERNEL_PATCHVER"
+     KERNEL_patc="pending-$NEW_KERNEL_PATCHVER"
 fi
 if [[ -n "$NEW_KERNEL_PATCHVER" ]]; then
     if [[ "$NEW_KERNEL_PATCHVER" == "0" ]]; then
