@@ -70,7 +70,7 @@ function parse_settings() {
 		ENABLE_PACKAGES_UPDATE="false"
 	fi
 	if [[ $NEW_KERNEL_PATCHVER =~ (default|DEFAULT|Default) || -z $NEW_KERNEL_PATCHVER ]]; then
-        NEW_KERNEL_PATCHVER="0"  # 使用默认值 0
+        NEW_KERNEL_PATCHVER="6.1"  # 使用默认值 0
         fi
 	case "$SOURCE_ABBR" in
 	lede|Lede|LEDE)
@@ -271,7 +271,7 @@ function do_diy() {
 	# 执行公共脚本
 	diy_public
 	echo '-----------------定义kernel MD5，与官网一致'
-echo "$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-6.6 | grep HASH | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')" > ./.vermagic
+echo "$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-$NEW_KERNEL_PATCHVER | grep HASH | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')" > ./.vermagic
 cat .vermagic
 
 sed -i 's/^\tgrep.*vermagic/\tcp -f \$(TOPDIR)\/\.vermagic \$(LINUX_DIR)\/\.vermagic/g' include/kernel-defaults.mk
