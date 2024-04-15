@@ -271,7 +271,7 @@ function do_diy() {
 	# 执行公共脚本
 	diy_public
 	echo '-----------------定义kernel MD5，与官网一致'
-echo "$(wget -qO- https://downloads.openwrt.org/snapshots/targets/x86/64/packages/ | grep -oE '[0-9a-f]{32}' | head -n 1)" > ./.vermagic
+echo "$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-6.6 | grep HASH | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')" > ./.vermagic
 cat .vermagic
 
 sed -i 's/^\tgrep.*vermagic/\tcp -f \$(TOPDIR)\/\.vermagic \$(LINUX_DIR)\/\.vermagic/g' include/kernel-defaults.mk
@@ -1389,10 +1389,16 @@ function organize_firmware() {
 	__yellow_color "开始准备固件发布文件..."
 	__info_msg "准备ipk压缩包"
 	if [[ "$UPLOAD_FIRMWARE" == "true" || "$UPLOAD_RELEASE" == "true" ]]; then
-		[[ ! -d $FIRMWARE_PATH/ipk ]] && mkdir -p $FIRMWARE_PATH/ipk || rm -rf $FIRMWARE_PATH/ipk/*
-		cp -rf $(find $HOME_PATH/bin/packages/ -type f -name "*.ipk") $FIRMWARE_PATH/ipk/ && sync
-		sudo tar -czf ipk.tar.gz ipk && sync && sudo rm -rf ipk
-		
+		curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-6.6 > kernel.txt
+    kmod_hash=$(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')
+    kmodpkg_name=$(echo $(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}')-1-$(echo $kmod_hash))
+		cp -a bin/targets/x86/*/packages $kmodpkg_name
+            rm -f $kmodpkg_name/Packages*
+            # driver firmware
+            cp -a bin/packages/x86_64/base/*firmware*.ipk $kmodpkg_name/
+            bash kmod-sign $kmodpkg_name
+            tar zcf x86_64-$kmodpkg_name.tar.gz $kmodpkg_name
+            rm -rf $kmodpkg_name
 		echo "$COMPILE_DATE_CN" > $RELEASE_MD
 	fi
 	__info_msg "重命名固件名称"
