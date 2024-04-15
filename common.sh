@@ -1388,6 +1388,7 @@ function organize_firmware() {
 
 	__yellow_color "开始准备固件发布文件..."
 	__info_msg "准备ipk压缩包"
+        cd $HOME_PATH
 	if [[ "$UPLOAD_FIRMWARE" == "true" || "$UPLOAD_RELEASE" == "true" ]]; then
 		curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-6.6 > kernel.txt
     kmod_hash=$(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')
