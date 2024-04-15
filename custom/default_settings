@@ -18,6 +18,9 @@ for file in $(ls /etc/init.d); do
 	chmod +x /etc/init.d/$file
 done
 
+#修改kmod
+sed -i "/openwrt_core/c\src/gz openwrt_core https://kuyun.org/main/kmod-x86_64/$(grep Version /usr/lib/opkg/info/kernel.control | awk '{print $2}')" /etc/opkg/distfeeds.conf
+
 # chmod 0777 /etc/opkg/distfeeds.conf
 if [[ `grep -c "openwrt_pkg" /etc/opkg/distfeeds.conf` -ge '1' ]]; then
 	sed -i '/openwrt_pkg/d' /etc/opkg/distfeeds.conf
