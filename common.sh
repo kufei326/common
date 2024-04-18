@@ -1389,17 +1389,10 @@ function organize_firmware() {
 	__yellow_color "开始准备固件发布文件..."
 	__info_msg "准备ipk压缩包"
 	if [[ "$UPLOAD_FIRMWARE" == "true" || "$UPLOAD_RELEASE" == "true" ]]; then
-        cd $HOME_PATH
-		curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-6.6 > kernel.txt
-    kmod_hash=$(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')
-    kmodpkg_name=$(echo $(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}')-1-$(echo $kmod_hash))
-		cp -a bin/targets/x86/*/packages $kmodpkg_name
-            rm -f $kmodpkg_name/Packages*
-            # driver firmware
-            cp -a bin/packages/x86_64/base/*firmware*.ipk $kmodpkg_name/
-            bash kmod-sign $kmodpkg_name
-            tar zcf x86_64-$kmodpkg_name.tar.gz $kmodpkg_name
-            rm -rf $kmodpkg_name
+		[[ ! -d $FIRMWARE_PATH/ipk ]] && mkdir -p $FIRMWARE_PATH/ipk || rm -rf $FIRMWARE_PATH/ipk/*
+		cp -rf $(find $HOME_PATH/bin/packages/ -type f -name "*.ipk") $FIRMWARE_PATH/ipk/ && sync
+		sudo tar -czf ipk.tar.gz ipk && sync && sudo rm -rf ipk
+		
 		echo "$COMPILE_DATE_CN" > $RELEASE_MD
 	fi
 	__info_msg "重命名固件名称"
