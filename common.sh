@@ -1399,7 +1399,18 @@ function organize_firmware() {
 	if [[ `ls -1 | grep -c "armvirt"` -eq '0' ]]; then
 		rename -v "s/^openwrt/$COMPILE_DATE_MD-$SOURCE-$LUCI_EDITION-$LINUX_KERNEL/" *
 	fi
-	
+        __info_msg "整理kmod"
+        curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-6.6 > kernel.txt
+        kmod_hash=$(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')
+        kmodpkg_name=$(echo $(grep HASH kernel.txt | awk -F'HASH-' '{print $2}' | awk '{print $1}')-1-$(echo $kmod_hash))
+	cp -a $FIRMWARE_PATH/*/packages $kmodpkg_name
+           rm -f $kmodpkg_name/Packages*
+# driver firmware
+cp -a $BIN_PATH/packages/x86_64/base/*firmware*.ipk $kmodpkg_name/
+bash kmod-sign $kmodpkg_name
+tar zcf x86_64-$kmodpkg_name.tar.gz $kmodpkg_name
+rm -rf $kmodpkg_name
+
 	release_info	
 }
 
