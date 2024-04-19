@@ -201,7 +201,7 @@ function notice_end() {
 ################################################################################################################
 # 初始化编译环境
 ################################################################################################################
-function init_environment() {
+#function init_environment() {
 	sudo sh -c 'echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main" >> /etc/apt/sources.list'
         sudo sh -c 'echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main" >> /etc/apt/sources.list'
         wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
