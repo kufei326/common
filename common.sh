@@ -202,17 +202,12 @@ function notice_end() {
 # 初始化编译环境
 ################################################################################################################
 function init_environment() {
-	sudo -E apt-get -qq update -y
-	#sudo -E apt-get -qq full-upgrade -y
-	sudo -E apt-get -qq install -y ack antlr3 aria2 asciidoc autoconf automake autopoint binutils bison \
-	build-essential bzip2 ccache clang cmake cpio curl device-tree-compiler fastjar flex g++-multilib gawk \
-	gcc-multilib gettext git git-core gperf haveged help2man intltool lib32stdc++6 libc6-dev-i386 libelf-dev \
-	libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev \
-	libpcap0.8-dev libpython3-dev libreadline-dev libssl-dev libtool libz-dev llvm lrzsz mkisofs msmtp \
-	nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pip qemu-utils rename rsync \
-	scons squashfs-tools subversion swig texinfo tree uglifyjs unzip upx upx-ucl vim wget xmlto xxd zlib1g-dev
-	#sudo -E apt-get -qq autoremove -y --purge
-	#sudo -E apt-get -qq clean
+	sudo sh -c 'echo "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main" >> /etc/apt/sources.list'
+        sudo sh -c 'echo "deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main" >> /etc/apt/sources.list'
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo apt-get update
+        sudo apt-get install -y build-essential flex bison clang-17 cmake g++ gawk gcc-multilib g++-multilib gettext git libfuse-dev libncurses5-dev libssl-dev python3 python3-pip python3-ply python3-distutils python3-pyelftools rsync unzip zlib1g-dev file wget subversion patch upx-ucl autoconf automake curl asciidoc binutils bzip2 lib32gcc-s1 libc6-dev-i386 uglifyjs msmtp texinfo libreadline-dev libglib2.0-dev xmlto libelf-dev libtool autopoint antlr3 gperf ccache swig coreutils haveged scons libpython3-dev rename qemu-utils
+        sudo apt-get clean
 	sudo timedatectl set-timezone "$TZ"
 	# "/"目录创建文件夹$MATRIX_TARGET
 	sudo mkdir -p /$MATRIX_TARGET
