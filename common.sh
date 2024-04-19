@@ -271,11 +271,9 @@ function do_diy() {
 	# 执行公共脚本
 	diy_public
 	echo '-----------------定义kernel MD5，与官网一致'
-echo "$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-$NEW_KERNEL_PATCHVER | grep HASH | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')" > ./.vermagic
+echo "$(curl -s https://raw.githubusercontent.com/openwrt/openwrt/main/include/kernel-$NEW_KERNEL_PATCHVER | grep HASH | awk -F'HASH-' '{print $2}' | awk '{print $1}' | md5sum | awk '{print $1}')" > .vermagic
 cat .vermagic
-
-sed -i 's/^\tgrep.*vermagic/\tcp -f \$(TOPDIR)\/\.vermagic \$(LINUX_DIR)\/\.vermagic/g' include/kernel-defaults.mk
-
+sed -ie 's/^\(.\).*vermagic$/\1cp $(TOPDIR)\/.vermagic $(LINUX_DIR)\/.vermagic/' include/kernel-defaults.mk
 	# 执行私有脚本
 	if [[ $SOURCE =~ (lede|Lede|LEDE) ]]; then
 		diy_lede
