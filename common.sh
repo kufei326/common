@@ -581,18 +581,14 @@ function modify_config() {
 	make defconfig > /dev/null 2>&1
 	
 	# 缓存加速
-	if [[ $ENABLE_CCACHE =~ (fast|Fast|FAST) ]]; then
-		__info_msg "快速缓存加速，如编译出错，请尝试删除缓存，或切换为普通加速，或关闭缓存加速"
+	if [[ $ENABLE_CCACHE =~ (fast|Fast|FAST|true|True|TRUE|normal|Normal|NORMAL) ]]; then
+		__info_msg "开启缓存加速，如编译出错，请尝试删除缓存，或切换为普通加速，或关闭缓存加速"
 		sed -i '/CONFIG_DEVEL/d' $HOME_PATH/.config > /dev/null 2>&1
 		sed -i '/CONFIG_CCACHE/d' $HOME_PATH/.config > /dev/null 2>&1
 		sed -i '$a CONFIG_DEVEL=y' $HOME_PATH/.config > /dev/null 2>&1
 		sed -i '$a CONFIG_CCACHE=y' $HOME_PATH/.config > /dev/null 2>&1
-	elif [[ $ENABLE_CCACHE =~ (true|True|TRUE|normal|Normal|NORMAL) ]]; then
-		__info_msg "普通缓存加速，如编译出错，请尝试删除缓存，或关闭缓存加速"
-		sed -i '/CONFIG_DEVEL/d' $HOME_PATH/.config > /dev/null 2>&1
-		sed -i '/CONFIG_CCACHE/d' $HOME_PATH/.config > /dev/null 2>&1
 	else
-		__info_msg "关闭缓存加速，希望快速编译，请在settings.ini中开启缓存加速"
+		__info_msg "关闭缓存加速，如希望加速编译，请在settings.ini中开启缓存加速"
 		sed -i '/CONFIG_DEVEL/d' $HOME_PATH/.config > /dev/null 2>&1
 		sed -i '/CONFIG_CCACHE/d' $HOME_PATH/.config > /dev/null 2>&1
 	fi
@@ -696,7 +692,7 @@ function modify_config() {
 	if [[ `grep -c "CONFIG_TARGET_x86=y" $HOME_PATH/.config` -eq '1' || `grep -c "CONFIG_TARGET_rockchip=y" $HOME_PATH/.config` -eq '1' || `grep -c "CONFIG_TARGET_bcm27xx=y" $HOME_PATH/.config` -eq '1' ]]; then
 		#sed -Ei 's/.*(CONFIG_TARGET_IMAGES_GZIP).*/\1=y/g' $HOME_PATH/.config
 		#sed -Ei 's/.*(CONFIG_PACKAGE_snmpd).*/\1=y/g' $HOME_PATH/.config
-		sed -Ei 's/.*(CONFIG_PACKAGE_openssh-sftp-server).*/\1=y/g' $HOME_PATH/.config
+		#sed -Ei 's/.*(CONFIG_PACKAGE_openssh-sftp-server).*/\1=y/g' $HOME_PATH/.config
 		if [[ `grep -c "CONFIG_TARGET_ROOTFS_PARTSIZE=" $HOME_PATH/.config` -eq '1' ]]; then
 			local partsize="$(grep -Eo "CONFIG_TARGET_ROOTFS_PARTSIZE=[0-9]+" $HOME_PATH/.config |cut -f2 -d=)"
 			if [[ "$partsize" -lt "400" ]];then
@@ -708,7 +704,7 @@ function modify_config() {
 	
 	if [[ `grep -c "CONFIG_TARGET_mxs=y" $HOME_PATH/.config` -eq '1' || `grep -c "CONFIG_TARGET_sunxi=y" $HOME_PATH/.config` -eq '1' || `grep -c "CONFIG_TARGET_zynq=y" $HOME_PATH/.config` -eq '1' ]]; then	
 		#sed -Ei 's/.*(CONFIG_TARGET_IMAGES_GZIP).*/\1=y/g' $HOME_PATH/.config
-		sed -Ei 's/.*(CONFIG_PACKAGE_openssh-sftp-server).*/\1=y/g' $HOME_PATH/.config
+		#sed -Ei 's/.*(CONFIG_PACKAGE_openssh-sftp-server).*/\1=y/g' $HOME_PATH/.config
 		if [[ `grep -c "CONFIG_TARGET_ROOTFS_PARTSIZE=" $HOME_PATH/.config` -eq '1' ]]; then
 			local partsize="$(grep -Eo "CONFIG_TARGET_ROOTFS_PARTSIZE=[0-9]+" $HOME_PATH/.config |cut -f2 -d=)"
 			if [[ "$partsize" -lt "400" ]];then
@@ -1181,11 +1177,8 @@ function compile_info() {
 	else
 		__white_color "Pushplus/Telegram通知: 关闭"
 	fi
-	if [[ $ENABLE_CCACHE =~ (fast|Fast|FAST) ]]; then
-		__blue_color "缓存加速：快速加速"
-		__white_color "如编译出错，请尝试删除缓存，或切换为普通加速，或关闭缓存加速"
-	elif [[ $ENABLE_CCACHE =~ (true|True|TRUE|normal|Normal|NORMAL) ]]; then
-		__blue_color "缓存加速：普通加速"
+	if [[ $ENABLE_CCACHE =~ (fast|Fast|FAST|true|True|TRUE|normal|Normal|NORMAL) ]]; then
+		__blue_color "缓存加速：开启"
 		__white_color "如编译出错，请尝试删除缓存，或关闭缓存加速"
 	else
 		__white_color "缓存加速：关闭"
